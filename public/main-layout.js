@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <title>TASKMANAGER</title>
-  </head>
+import useSWR from 'swr'
+function MainLayout(){
+    const {data,error} = useSWR('/tasks')
 
-  <body>
-    <div style="display: none">
+    if (error){
+        return <div>Ошибка доступа или сети</div>
+    }
+    if (!data){
+        return <div>загрузка...</div>
+    }
+    return (
+    <>
+    <div style={{display:"none"}}>
       <svg>
         <symbol
           id="wave"
@@ -437,5 +434,7 @@
         <button class="load-more" type="button">load more</button>
       </section>
     </main>
-  </body>
-</html>
+</>
+)
+}
+export default MainLayout
