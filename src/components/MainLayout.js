@@ -20,14 +20,20 @@ function MainLayout() {
     return <div>Загрузка...</div>;
   }
 
-  const tasks = data.filter(filterCallBacks[filterType]);
+  const tasks = [...data]
+    .filter(filterCallBacks[filterType])
+    .sort(sortedCallBacks[sortType]);
   return (
     <>
       <SvgSprite />
 
       <main class="main">
         <MainControl />
-        <MainFilter setFilterType={setFilterType} />
+        <MainFilter
+          data={data}
+          filterType={filterType}
+          setFilterType={setFilterType}
+        />
 
         <section class="board container">
           <SortList setSortType={setSortType} />
