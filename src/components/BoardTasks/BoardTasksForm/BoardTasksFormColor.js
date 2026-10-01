@@ -1,5 +1,6 @@
 const BoardTasksFormColor = ({ color, checked }) => {
   const id = crypto.randomUUID();
+
   return (
     <>
       <input
@@ -7,8 +8,8 @@ const BoardTasksFormColor = ({ color, checked }) => {
         id={`color-${color}-${id}`}
         class={`card__color-input card__color-input--${color} visually-hidden`}
         name="color"
-        value={`${color}`}
-        // {...(checked $$ {checked:'checked'})}
+        value={color}
+        {...(checked && { checked: 'checked' })}
       />
       <label
         for={`color-${color}-${id}`}

@@ -1,38 +1,64 @@
-import { useState } from "react";
-import BoardTasksFormColor from "./BoardTasksFormColor";
-import BoardTasksFormRepeatDay from "./BoardTasksFormRepeatDay";
+import useSWRMutation from 'swr/mutation';
+import BoardTasksFormColor from './BoardTasksFormColor';
+import BoardTasksFormRepeatDay from './BoardTasksFormRepeatDay';
+import { useState } from 'react';
+import { sendRequest } from '../../../api/api-config';
+import { useSWRConfig } from 'swr';
+
+const colors = {
+  black: true,
+  yellow: false,
+  blue: false,
+  green: false,
+  pink: false,
+};
 
 const BoardTasksForm = ({ task, setIsEdit }) => {
-  const { id, color, description, repeating_days: repeatDays } = task;
-  // const repeatDays = {
-  //   mo: false,
-  //   tu: true,
-  //   we: false,
-  //   th: false,
-  //   fr: false,
-  //   sa: false,
-  //   su: false,
-  // };
+  const {
+    id,
+    color,
+    description,
+    repeating_days: repeatDays,
+  } = task;
 
-  const colors = {
-    black: true,
-    yellow: false,
-    blue: false,
-    green: false,
-    pink: false,
+  const [text, setText] = useState(description);
+  const { trigger, isMutating } = useSWRMutation(
+    `tasks/${id}`,
+    sendRequest,
+  );
+  const { mutate } = useSWRConfig('/tasks');
+
+  const handleText = (event) => {
+    setText(event.target.value);
   };
 
-  const handleSave = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
+
+    try {
+      const result = await trigger({
+        ...task,
+        description: text,
+      });
+
+      await mutate('/tasks');
+    } catch (e) {}
+
     setIsEdit(false);
   };
 
   return (
-    <article class={`card card--edit card--${color} card--repeat`}>
+    <article
+      class={`card card--edit card--${color} card--repeat`}
+    >
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__color-bar">
-            <svg class="card__color-bar-wave" width="100%" height="10">
+            <svg
+              class="card__color-bar-wave"
+              width="100%"
+              height="10"
+            >
               <use xlinkHref="#wave"></use>
             </svg>
           </div>
@@ -43,17 +69,21 @@ const BoardTasksForm = ({ task, setIsEdit }) => {
                 class="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >
-                {description}
-              </textarea>
+                value={text}
+                onChange={handleText}
+              />
             </label>
           </div>
 
           <div class="card__settings">
             <div class="card__details">
               <div class="card__dates">
-                <button class="card__date-deadline-toggle" type="button">
-                  date: <span class="card__date-status">yes</span>
+                <button
+                  class="card__date-deadline-toggle"
+                  type="button"
+                >
+                  date:{' '}
+                  <span class="card__date-status">yes</span>
                 </button>
 
                 <fieldset class="card__date-deadline">
@@ -68,16 +98,26 @@ const BoardTasksForm = ({ task, setIsEdit }) => {
                   </label>
                 </fieldset>
 
-                <button class="card__repeat-toggle" type="button">
+                <button
+                  class="card__repeat-toggle"
+                  type="button"
+                >
                   repeat:
-                  <span class="card__repeat-status">yes</span>
+                  <span class="card__repeat-status">
+                    yes
+                  </span>
                 </button>
 
                 <fieldset class="card__repeat-days">
                   <div class="card__repeat-days-inner">
-                    {Object.entries(repeatDays).map(([day, checked]) => (
-                      <BoardTasksFormRepeatDay day={day} checked={checked} />
-                    ))}
+                    {Object.entries(repeatDays).map(
+                      ([day, checked]) => (
+                        <BoardTasksFormRepeatDay
+                          day={day}
+                          checked={checked}
+                        />
+                      ),
+                    )}
                   </div>
                 </fieldset>
               </div>
@@ -86,15 +126,24 @@ const BoardTasksForm = ({ task, setIsEdit }) => {
             <div class="card__colors-inner">
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
-                {Object.entries(colors).map(([color, checked]) => (
-                  <BoardTasksFormColor color={color} checked={checked} />
-                ))}
+                {Object.entries(colors).map(
+                  ([color, checked]) => (
+                    <BoardTasksFormColor
+                      color={color}
+                      checked={checked}
+                    />
+                  ),
+                )}
               </div>
             </div>
           </div>
 
           <div class="card__status-btns">
-            <button onClick={handleSave} class="card__save" type="submit">
+            <button
+              class="card__save"
+              type="submit"
+              onClick={handleSave}
+            >
               save
             </button>
             <button class="card__delete" type="button">
