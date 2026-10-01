@@ -66,7 +66,7 @@ const filters = [
     filterType: "archive",
     disabled: false,
     checked: false,
-    count: 0,
+    count: 10,
   },
 ];
 

@@ -1,13 +1,13 @@
+// import BoardTasksForm from "./BoardTasksForm/BoardTasksForm";
 import BoardTasksItem from "./BoardTasksItem";
-import BoardTasksForm from "./BoardTasksForm/BoardTasksForm";
 
 function BoardTasks({ tasks }) {
   return (
     <div class="board__tasks">
-      <BoardTasksForm />
-      {tasks.map((task) => (
-        <BoardTasksItem task={task} />
-      ))}
+      {/* <BoardTasksForm task={}/> */}
+      {tasks.map((task) => {
+        return <BoardTasksItem task={task} />;
+      })}
     </div>
   );
 }
