@@ -70,4 +70,22 @@ const filters = [
   },
 ];
 
-export { filterCallBacks, sortedCallBacks, filters };
+const DEFAULT_TASK = {
+  id: null,
+  color: "yellow",
+  description: "New task",
+  due_date: new Date().toISOString(),
+  is_archived: false,
+  is_favorite: false,
+  repeating_days: {
+    mo: false,
+    tu: false,
+    we: false,
+    th: false,
+    fr: false,
+    sa: false,
+    su: false,
+  },
+};
+
+export { filterCallBacks, sortedCallBacks, filters, DEFAULT_TASK };
